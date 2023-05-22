@@ -2,11 +2,12 @@ require_relative 'my_app'
 
 # Spawn a QMap Agent as a daemon.
 myapp_agent = MyApp.spawn( :agent, daemonize: true )
+at_exit { myapp_agent.shutdown rescue nil }
 
 # Spawn and connect to an Instance.
 myapp = MyApp.connect( myapp_agent.spawn )
 # Don't forget this!
-at_exit { myapp.shutdown }
+at_exit { myapp.shutdown rescue nil }
 
 myapp.run(
   peplum: {

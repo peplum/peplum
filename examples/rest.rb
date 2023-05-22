@@ -17,7 +17,9 @@ while sleep 1
 end
 
 # Assign an Agent to the REST service for it to provide us with Instances.
-request :put, 'agent/url', MyApp.spawn( :agent, daemonize: true ).url
+myapp_agent = MyApp.spawn( :agent, daemonize: true )
+request :put, 'agent/url', myapp_agent.url
+at_exit { myapp_agent.shutdown rescue nil }
 
 # Create a new Instance (process) and run its payload with the following options.
 request :post, 'instances', {
