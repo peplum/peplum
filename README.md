@@ -9,6 +9,11 @@ Basically, Peplum allows you to combine several machines to built a cluster/supe
 
 Being written in Ruby, you can run OS applications, Ruby code, C/C++/Rust extensions and package your Peplum app as a gem.
 
+## Goal
+
+The goal of the project is for Peplum to be to distributed computing development what Sinatra or Rails is for web application development.
+Am abstract, application-centric, straightforward and simple framework that get's out of your way and let's you accomplish your goals.
+
 ## Installation
 
     $ git clone git@github.com:peplum/peplum.git
