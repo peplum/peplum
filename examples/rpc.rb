@@ -9,7 +9,7 @@ myapp = MyApp.connect( myapp_agent.spawn )
 at_exit { myapp.shutdown }
 
 myapp.run(
-  velo: {
+  peplum: {
     objects:     %w(1 2 3 4 5 6 7 8 9 0),
     max_workers: 5
   },

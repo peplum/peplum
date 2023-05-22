@@ -1,13 +1,13 @@
 require 'cuboid'
 require 'json'
-require 'velo'
-require 'velo/core_ext/array'
+require 'peplum'
+require 'peplum/core_ext/array'
 
-module Velo
+module Peplum
   class Application < Cuboid::Application
-    require 'velo/application/scheduler'
+    require 'peplum/application/scheduler'
 
-    class Error < Velo::Error; end
+    class Error < Peplum::Error; end
 
     class <<self
       def inherited( application )
@@ -24,20 +24,20 @@ module Velo
 
     def run
       options = @options.dup
-      velo_options   = options.delete( 'velo' )
+      peplum_options   = options.delete( 'peplum' )
       native_options = options.delete( 'native' )
 
       # We have a master so we're not the scheduler, run the payload.
-      if (master_info = velo_options.delete( 'master' ))
-        report_data = native_app.run( velo_options['objects'], native_options )
+      if (master_info = peplum_options.delete( 'master' ))
+        report_data = native_app.run( peplum_options['objects'], native_options )
 
         master = Processes::Instances.connect( master_info['url'], master_info['token'] )
         master.scheduler.report report_data, Cuboid::Options.rpc.url
 
       # We're the scheduler Instance.
       else
-        max_workers = velo_options.delete('max_workers')
-        objects     = velo_options.delete('objects')
+        max_workers = peplum_options.delete('max_workers')
+        objects     = peplum_options.delete('objects')
         groups      = native_app.group( objects, max_workers )
 
         # Workload turned out to be less than our maximum allowed instances.
@@ -67,7 +67,7 @@ module Velo
 
         self.scheduler.workers.values.each do |worker|
           worker.run(
-            velo: {
+            peplum: {
               objects: groups.pop,
               master:  {
                 url: Cuboid::Options.rpc.url,
@@ -105,13 +105,13 @@ module Velo
         fail Error, 'Missing Agent!'
       end
 
-      velo_options = options['velo']
+      peplum_options = options['peplum']
 
-      if !velo_options.include? 'objects'
+      if !peplum_options.include? 'objects'
         fail Error, 'Options: Missing :objects'
       end
 
-      if !velo_options['master'] && !velo_options.include?( 'max_workers' )
+      if !peplum_options['master'] && !peplum_options.include?( 'max_workers' )
         fail Error, 'Options: Missing :max_workers'
       end
 

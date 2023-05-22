@@ -1,9 +1,9 @@
 require 'pp'
-require 'velo'
+require 'peplum'
 
-class MyApp < Velo::Application
+class MyApp < Peplum::Application
 
-  # 100MB RAM should be more than enough for native and Velo.
+  # 100MB RAM should be more than enough for native and Peplum.
   provision_memory 100 * 1024 * 1024
 
   # 100MB disk space should be more than enough.

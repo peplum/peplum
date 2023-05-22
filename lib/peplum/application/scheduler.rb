@@ -1,4 +1,4 @@
-module Velo
+module Peplum
 class Application
 
 class Scheduler
@@ -13,7 +13,7 @@ class Scheduler
     worker_info = agent.spawn
     return if !worker_info
 
-    worker = Velo::Application.connect( worker_info )
+    worker = Peplum::Application.connect( worker_info )
     self.workers[worker.url] = worker
     worker
   end

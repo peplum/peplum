@@ -1,7 +1,19 @@
 PATH
-  remote: ../../qadron/cuboid
+  remote: .
   specs:
-    cuboid (0.2.4)
+    peplum (0.1.0)
+      cuboid
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    awesome_print (1.6.1)
+    childprocess (0.8.0)
+      ffi (~> 1.0, >= 1.0.11)
+    concurrent-ruby (1.1.8)
+    concurrent-ruby-ext (1.1.8)
+      concurrent-ruby (= 1.1.8)
+    cuboid (0.2.4.1)
       awesome_print (= 1.6.1)
       bundler
       childprocess (= 0.8.0)
@@ -17,22 +29,6 @@ PATH
       sys-proctable (= 1.1.5)
       toq (~> 0.0.1)
       vmstat (= 2.3.0)
-
-PATH
-  remote: .
-  specs:
-    velo (0.1.0)
-      cuboid
-
-GEM
-  remote: https://rubygems.org/
-  specs:
-    awesome_print (1.6.1)
-    childprocess (0.8.0)
-      ffi (~> 1.0, >= 1.0.11)
-    concurrent-ruby (1.1.8)
-    concurrent-ruby-ext (1.1.8)
-      concurrent-ruby (= 1.1.8)
     ffi (1.15.5)
     msgpack (1.1.0)
     multi_json (1.15.0)
@@ -71,9 +67,8 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  cuboid!
   rake (~> 13.0)
-  velo!
+  peplum!
 
 BUNDLED WITH
    2.4.13

@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in velo.gemspec
+# Specify your gem's dependencies in peplum.gemspec
 gemspec
 
 gem "rake", "~> 13.0"

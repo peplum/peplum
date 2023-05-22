@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "velo/version"
+require "peplum/version"
 
-module Velo
+module Peplum
   class Error < StandardError; end
   # Your code goes here...
 
-  require "velo/application"
+  require "peplum/application"
 end

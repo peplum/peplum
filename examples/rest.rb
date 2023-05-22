@@ -21,7 +21,7 @@ request :put, 'agent/url', MyApp.spawn( :agent, daemonize: true ).url
 
 # Create a new scanner Instance (process) and run a scan with the following options.
 request :post, 'instances', {
-  velo: {
+  peplum: {
     objects:     %w(1 2 3 4 5 6 7 8 9 0),
     max_workers: 5
   },
