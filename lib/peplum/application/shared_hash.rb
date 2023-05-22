@@ -20,7 +20,7 @@ class SharedHash
     @hash[k] = v
 
     if broadcast
-      each_peer do |_, peer|
+      each_peer do |peer|
         peer.shared_hash.set( k, v, false ) {}
       end
     end

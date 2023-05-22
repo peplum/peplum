@@ -17,8 +17,8 @@ class Peers
   end
 
   def each( &block )
-    @peers.each do |url, client|
-      block.call url, client
+    @peers.each do |_, client|
+      block.call client
     end
   end
 
