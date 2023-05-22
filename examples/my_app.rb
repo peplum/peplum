@@ -2,6 +2,7 @@ require 'pp'
 require 'peplum'
 
 class MyApp < Peplum::Application
+  require_relative 'my_app/my_service'
 
   # 100MB RAM should be more than enough for native and Peplum.
   provision_memory 100 * 1024 * 1024
@@ -9,12 +10,19 @@ class MyApp < Peplum::Application
   # 100MB disk space should be more than enough.
   provision_disk   100 * 1024 * 1024
 
+  instance_service_for :my_service, MyService
+
   module Native
 
     # Run payload against `objects`.
     def run( objects, options = nil )
       # Signal that we started work or something to our peers...
       MyApp.shared_hash.set( Process.pid, options )
+
+      # Access peer's services.
+      MyApp.peers.each do |peer|
+        p peer.my_service.foo
+      end
 
       pp [objects, options]
     end
