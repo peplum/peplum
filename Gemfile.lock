@@ -67,8 +67,8 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  rake (~> 13.0)
   peplum!
+  rake (~> 13.0)
 
 BUNDLED WITH
    2.4.13

@@ -72,20 +72,21 @@ module Peplum
           fail Error, 'Workload distribution error, uneven grouping!'
         end
 
+        scheduler = self.scheduler.class
         instance_num.times.each do |i|
           # Get as many workers as necessary/possible.
-          break unless self.scheduler.get_worker
+          break unless scheduler.get_worker
         end
 
         # We couldn't get the workers we were going for, Grid reached its capacity,
         # re-balance distribution.
-        if self.scheduler.workers.size < groups.size
-          groups = native_app.group( objects, self.scheduler.workers.size )
+        if scheduler.workers.size < groups.size
+          groups = native_app.group( objects, scheduler.workers.size )
         end
 
-        peers = Hash[self.scheduler.workers.values.map { |client| [client.url, client.token] }]
+        peers = Hash[scheduler.workers.values.map { |client| [client.url, client.token] }]
 
-        self.scheduler.workers.values.each do |worker|
+        scheduler.workers.values.each do |worker|
           worker.run(
             peplum: {
               objects: groups.pop,
@@ -99,7 +100,7 @@ module Peplum
           )
         end
 
-        self.scheduler.wait
+        scheduler.wait
       end
     end
 

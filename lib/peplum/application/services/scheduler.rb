@@ -4,44 +4,49 @@ module Services
 
 class Scheduler
 
-  def initialize(*)
-    super
+  # Keep those out of RPC.
+  class <<self
+    def get_worker
+      worker_info = agent.spawn
+      return if !worker_info
 
-    @done_signal = Queue.new
-  end
+      worker = Peplum::Application.connect( worker_info )
+      self.workers[worker.url] = worker
+      worker
+    end
 
-  def get_worker
-    worker_info = agent.spawn
-    return if !worker_info
+    def done_signal
+      @done_signal ||= Queue.new
+    end
 
-    worker = Peplum::Application.connect( worker_info )
-    self.workers[worker.url] = worker
-    worker
-  end
+    def wait
+      self.done_signal.pop
+    end
 
-  def workers
-    @workers ||= {}
+    def done
+      self.done_signal << nil
+    end
+
+    def agent
+      @agent ||= Processes::Agents.connect( Cuboid::Options.agent.url )
+    end
+
+    def workers
+      @workers ||= {}
+    end
   end
 
   def report( data, url )
-    return if !(worker = workers.delete( url ))
+    return if !(worker = self.class.workers.delete( url ))
 
     report_data << data
 
     worker.shutdown {}
-    return unless workers.empty?
+    return unless self.class.workers.empty?
 
     Cuboid::Application.application.report report_data
 
-    @done_signal << nil
-  end
-
-  def wait
-    @done_signal.pop
-  end
-
-  def agent
-    @agent ||= Processes::Agents.connect( Cuboid::Options.agent.url )
+    self.class.done
   end
 
   private
