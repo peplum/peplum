@@ -7,6 +7,8 @@ otherwise time consuming tasks.
 
 Basically, Peplum allows you to combine several machines to built a cluster/supercomputer of sorts.
 
+Being written in Ruby, you can run OS applications, Ruby code, C/C++/Rust extensions and package your Peplum app as a gem.
+
 ## Installation
 
     $ git clone git@github.com:peplum/peplum.git
