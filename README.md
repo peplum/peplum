@@ -12,7 +12,8 @@ Being written in Ruby, you can run OS applications, Ruby code, C/C++/Rust extens
 ## Goal
 
 The goal of the project is for Peplum to be to distributed computing development what Sinatra or Rails is for web application development.
-Am abstract, application-centric, straightforward and simple framework that get's out of your way and let's you accomplish your goals.
+
+An abstract, application-centric, straightforward and simple framework that get's out of your way and let's you accomplish your goals.
 
 ## Installation
 
