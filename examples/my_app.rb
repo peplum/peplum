@@ -10,6 +10,7 @@ class MyApp < Peplum::Application
   # 100MB disk space should be more than enough.
   provision_disk   100 * 1024 * 1024
 
+  # Add custom service to be accessible over the network.
   instance_service_for :my_service, MyService
 
   module Native
@@ -22,6 +23,7 @@ class MyApp < Peplum::Application
       # Access peer's services.
       MyApp.peers.each do |peer|
         p peer.my_service.foo
+        pp peer.my_service.shared_hash_to_hash
       end
 
       pp [objects, options]
