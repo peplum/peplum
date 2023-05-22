@@ -6,6 +6,8 @@ require 'peplum/core_ext/array'
 module Peplum
   class Application < Cuboid::Application
     require 'peplum/application/scheduler'
+    require 'peplum/application/shared_hash'
+    require 'peplum/application/peers'
 
     class Error < Peplum::Error; end
 
@@ -18,17 +20,25 @@ module Peplum
         application.validate_options_with :validate_options
         application.serialize_with JSON
 
-        application.instance_service_for :scheduler, Scheduler
+        application.instance_service_for :scheduler,   Scheduler
+        application.instance_service_for :shared_hash, SharedHash
+        application.instance_service_for :peers,       Peers
       end
     end
 
     def run
+      Raktr.global.on_error do |_, e|
+        $stderr.puts e
+      end
+
       options = @options.dup
-      peplum_options   = options.delete( 'peplum' )
+      peplum_options = options.delete( 'peplum' )
       native_options = options.delete( 'native' )
 
       # We have a master so we're not the scheduler, run the payload.
       if (master_info = peplum_options.delete( 'master' ))
+        self.peers.set( peplum_options.delete( 'peers' ) || {} )
+
         report_data = native_app.run( peplum_options['objects'], native_options )
 
         master = Processes::Instances.connect( master_info['url'], master_info['token'] )
@@ -65,10 +75,13 @@ module Peplum
           groups = native_app.group( objects, self.scheduler.workers.size )
         end
 
+        peers = Hash[self.scheduler.workers.values.map { |client| [client.url, client.token] }]
+
         self.scheduler.workers.values.each do |worker|
           worker.run(
             peplum: {
               objects: groups.pop,
+              peers:   peers,
               master:  {
                 url: Cuboid::Options.rpc.url,
                 token: Cuboid::Options.datastore.token

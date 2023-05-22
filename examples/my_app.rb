@@ -13,6 +13,9 @@ class MyApp < Peplum::Application
 
     # Run payload against `objects`.
     def run( objects, options = nil )
+      # Signal that we started work or something to our peers...
+      MyApp.shared_hash.set( Process.pid, options )
+
       pp [objects, options]
     end
 
