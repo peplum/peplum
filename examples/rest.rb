@@ -16,10 +16,10 @@ while sleep 1
   break
 end
 
-# Assign a QMap Agent to the REST service for it to provide us with scanner Instances.
+# Assign an Agent to the REST service for it to provide us with Instances.
 request :put, 'agent/url', MyApp.spawn( :agent, daemonize: true ).url
 
-# Create a new scanner Instance (process) and run a scan with the following options.
+# Create a new Instance (process) and run its payload with the following options.
 request :post, 'instances', {
   peplum: {
     objects:     %w(1 2 3 4 5 6 7 8 9 0),
@@ -41,7 +41,7 @@ end
 
 puts '*' * 88
 
-# Get the scan report.
+# Get the report.
 request :get, "instances/#{instance_id}/report.json"
 
 # Print out the report.
