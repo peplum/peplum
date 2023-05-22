@@ -30,7 +30,7 @@ class Scheduler
     worker.shutdown {}
     return unless workers.empty?
 
-    Cuboid::Application.report report_data
+    Cuboid::Application.application.report report_data
 
     @done_signal << nil
   end
