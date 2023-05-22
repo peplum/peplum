@@ -62,6 +62,10 @@ see [examples/rest.rb](https://github.com/peplum/peplum/blob/master/examples/res
 The _REST_ service is good for integration, so it's your safe bet; you can however also take advantage of the internal
 _RPC_ protocol and opt for something more like [examples/rpc.rb](https://github.com/peplum/peplum/blob/master/examples/rpc.rb).
 
+## Users
+
+* [Peplum::Nmap](https://github.com/peplum/peplum-nmap)
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/peplum/peplum.
