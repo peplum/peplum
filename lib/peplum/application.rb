@@ -44,63 +44,12 @@ module Peplum
       native_options = options.delete( 'native' )
 
       # We have a master so we're not the scheduler, run the payload.
-      if (master_info = peplum_options.delete( 'master' ))
-        self.peers.set( peplum_options.delete( 'peers' ) || {} )
+      if peplum_options['master']
+        execute( peplum_options, native_options )
 
-        report_data = native_app.run( peplum_options['objects'], native_options )
-
-        master = Processes::Instances.connect( master_info['url'], master_info['token'] )
-        master.scheduler.report report_data, Cuboid::Options.rpc.url
-
-      # We're the scheduler Instance.
+      # We're the scheduler Instance, get to grouping and spawning.
       else
-        max_workers = peplum_options.delete('max_workers')
-        objects     = peplum_options.delete('objects')
-        groups      = native_app.group( objects, max_workers )
-
-        # Workload turned out to be less than our maximum allowed instances.
-        # Don't spawn the max if we don't have to.
-        if groups.size < max_workers
-          instance_num = groups.size
-
-        # Workload distribution turned out as expected.
-        elsif groups.size == max_workers
-          instance_num = max_workers
-
-        # What the hell did just happen1?
-        else
-          fail Error, 'Workload distribution error, uneven grouping!'
-        end
-
-        scheduler = self.scheduler.class
-        instance_num.times.each do |i|
-          # Get as many workers as necessary/possible.
-          break unless scheduler.get_worker
-        end
-
-        # We couldn't get the workers we were going for, Grid reached its capacity,
-        # re-balance distribution.
-        if scheduler.workers.size < groups.size
-          groups = native_app.group( objects, scheduler.workers.size )
-        end
-
-        peers = Hash[scheduler.workers.values.map { |client| [client.url, client.token] }]
-
-        scheduler.workers.values.each do |worker|
-          worker.run(
-            peplum: {
-              objects: groups.pop,
-              peers:   peers,
-              master:  {
-                url: Cuboid::Options.rpc.url,
-                token: Cuboid::Options.datastore.token
-              }
-            },
-            native: native_options
-          )
-        end
-
-        scheduler.wait
+        schedule( peplum_options, native_options )
       end
     end
 
@@ -121,6 +70,67 @@ module Peplum
     end
 
     private
+
+    def execute( peplum_options, native_options )
+      master_info = peplum_options.delete( 'master' )
+
+      self.peers.set( peplum_options.delete( 'peers' ) || {} )
+
+      report_data = native_app.run( peplum_options['objects'], native_options )
+
+      master = Processes::Instances.connect( master_info['url'], master_info['token'] )
+      master.scheduler.report report_data, Cuboid::Options.rpc.url
+    end
+
+    def schedule( peplum_options, native_options )
+      max_workers = peplum_options.delete('max_workers')
+      objects     = peplum_options.delete('objects')
+      groups      = native_app.group( objects, max_workers )
+
+      # Workload turned out to be less than our maximum allowed instances.
+      # Don't spawn the max if we don't have to.
+      if groups.size < max_workers
+        instance_num = groups.size
+
+        # Workload distribution turned out as expected.
+      elsif groups.size == max_workers
+        instance_num = max_workers
+
+        # What the hell did just happen1?
+      else
+        fail Error, 'Workload distribution error, uneven grouping!'
+      end
+
+      scheduler = self.scheduler.class
+      instance_num.times.each do |i|
+        # Get as many workers as necessary/possible.
+        break unless scheduler.get_worker
+      end
+
+      # We couldn't get the workers we were going for, Grid reached its capacity,
+      # re-balance distribution.
+      if scheduler.workers.size < groups.size
+        groups = native_app.group( objects, scheduler.workers.size )
+      end
+
+      peers = Hash[scheduler.workers.values.map { |client| [client.url, client.token] }]
+
+      scheduler.workers.values.each do |worker|
+        worker.run(
+          peplum: {
+            objects: groups.pop,
+            peers:   peers,
+            master:  {
+              url: Cuboid::Options.rpc.url,
+              token: Cuboid::Options.datastore.token
+            }
+          },
+          native: native_options
+        )
+      end
+
+      scheduler.wait
+    end
 
     def validate_options( options )
       if !Cuboid::Options.agent.url
