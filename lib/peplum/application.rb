@@ -22,8 +22,15 @@ module Peplum
 
         application.instance_service_for :scheduler,   Scheduler
         application.instance_service_for :shared_hash, SharedHash
-        application.instance_service_for :peers,       Peers
       end
+    end
+
+    attr_reader :peers
+
+    def initialize(*)
+      super
+
+      @peers = Peers.new
     end
 
     def run
