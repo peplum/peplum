@@ -1,5 +1,6 @@
 module Peplum
 class Application
+module Services
 
 class SharedHash
 
@@ -59,5 +60,6 @@ class SharedHash
 
 end
 
+end
 end
 end

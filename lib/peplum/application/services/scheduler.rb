@@ -1,5 +1,6 @@
 module Peplum
 class Application
+module Services
 
 class Scheduler
 
@@ -51,5 +52,6 @@ class Scheduler
 
 end
 
+end
 end
 end

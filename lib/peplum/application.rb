@@ -5,9 +5,10 @@ require 'peplum/core_ext/array'
 
 module Peplum
   class Application < Cuboid::Application
-    require 'peplum/application/scheduler'
-    require 'peplum/application/shared_hash'
     require 'peplum/application/peers'
+
+    require 'peplum/application/services/shared_hash'
+    require 'peplum/application/services/scheduler'
 
     class Error < Peplum::Error; end
 
@@ -20,8 +21,8 @@ module Peplum
         application.validate_options_with :validate_options
         application.serialize_with JSON
 
-        application.instance_service_for :scheduler,   Scheduler
-        application.instance_service_for :shared_hash, SharedHash
+        application.instance_service_for :scheduler,   Services::Scheduler
+        application.instance_service_for :shared_hash, Services::SharedHash
       end
     end
 
