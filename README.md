@@ -2,7 +2,7 @@
 
 Velo is a distributed computing solution backed by [Cuboid](https://github.com/qadron/cuboid).
 
-Its basic function is to distribute workloads and delivery payloads across multiple machines and thus parallelize 
+Its basic function is to distribute workloads and deliver payloads across multiple machines and thus parallelize 
 otherwise time consuming tasks.
 
 Basically, Velo allows you to combine several machines to built a cluster/supercomputer of sorts.
