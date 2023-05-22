@@ -11,31 +11,39 @@ class SharedHash
     @hash[k]
   end
 
-  def set( k, v, broadcast = true )
-    return if @hash[k] == v
+  def set( k, v, broadcast = true, &block )
+    if @hash[k] == v
+      block.call if block_given?
+      return
+    end
 
     @hash[k] = v
 
     if broadcast
       each_peer do |_, peer|
-        peer.shared_hash.set( k, v, false )
+        peer.shared_hash.set( k, v, false ) {}
       end
     end
 
+    block.call if block_given?
     nil
   end
 
   def delete( k, broadcast = true )
-    return if !@hash.include? k
+    if !@hash.include? k
+      block.call if block_given?
+      return
+    end
 
     @hash.delete( k )
 
     if broadcast
       each_peer do |_, peer|
-        peer.shared_hash.delete( k, false )
+        peer.shared_hash.delete( k, false ) {}
       end
     end
 
+    block.call if block_given?
     nil
   end
 
