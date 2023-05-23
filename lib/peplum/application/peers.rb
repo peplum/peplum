@@ -2,6 +2,7 @@ module Peplum
 class Application
 
 class Peers
+  include Enumerable
 
   def initialize
     @peers = {}
