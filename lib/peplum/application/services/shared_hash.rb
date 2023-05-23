@@ -4,7 +4,9 @@ module Services
 
 class SharedHash
 
-  def initialize
+  def initialize(*)
+    super
+
     @hash = {}
 
     @on_set_cb    = {}
@@ -23,7 +25,7 @@ class SharedHash
 
     if broadcast
       each_peer do |peer|
-        peer.shared_hash.set( k, v, false )
+        peer.send( name ).set( k, v, false )
       end
     end
 
@@ -38,7 +40,7 @@ class SharedHash
 
     if broadcast
       each_peer do |_, peer|
-        peer.shared_hash.delete( k, false )
+        peer.send( name ).delete( k, false )
       end
     end
 
