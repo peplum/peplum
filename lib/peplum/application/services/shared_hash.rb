@@ -5,7 +5,8 @@ module Services
 class SharedHash
 
   def initialize
-    @hash = {}
+    @hash         = {}
+    @sync_counter = 0
   end
 
   def get( k )
@@ -22,7 +23,8 @@ class SharedHash
 
     if broadcast
       each_peer do |peer|
-        peer.shared_hash.set( k, v, false ) {}
+        @sync_counter += 1
+        peer.shared_hash.set( k, v, false ) { @sync_counter -= 1 }
       end
     end
 
@@ -40,7 +42,8 @@ class SharedHash
 
     if broadcast
       each_peer do |_, peer|
-        peer.shared_hash.delete( k, false ) {}
+        @sync_counter += 1
+        peer.shared_hash.delete( k, false ) { @sync_counter -= 1 }
       end
     end
 
@@ -50,6 +53,10 @@ class SharedHash
 
   def to_h
     @hash.dup
+  end
+
+  def sync
+    sleep 0.1 while @sync_counter != 0
   end
 
   private
