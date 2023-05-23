@@ -41,15 +41,15 @@ module Peplum
 
       options = @options.dup
       peplum_options = options.delete( 'peplum' )
-      native_options = options.delete( 'native' )
+      payload_options = options.delete( 'payload' )
 
       # We have a master so we're not the scheduler, run the payload.
       if peplum_options['master']
-        execute( peplum_options, native_options )
+        execute( peplum_options, payload_options )
 
       # We're the scheduler Instance, get to grouping and spawning.
       else
-        schedule( peplum_options, native_options )
+        schedule( peplum_options, payload_options )
       end
     end
 
@@ -61,31 +61,31 @@ module Peplum
     # That's all we need to turn any application into a super version of itself.
     #
     # @abstract
-    def native_app
-      fail Error, 'Missing native app!'
+    def payload
+      fail Error, 'Missing payload app!'
     end
 
     def report( data )
-      super native_app.merge( data )
+      super payload.merge( data )
     end
 
     private
 
-    def execute( peplum_options, native_options )
+    def execute( peplum_options, payload_options )
       master_info = peplum_options.delete( 'master' )
 
       self.peers.set( peplum_options.delete( 'peers' ) || {} )
 
-      report_data = native_app.run( peplum_options['objects'], native_options )
+      report_data = payload.run( peplum_options['objects'], payload_options )
 
       master = Processes::Instances.connect( master_info['url'], master_info['token'] )
       master.scheduler.report report_data, Cuboid::Options.rpc.url
     end
 
-    def schedule( peplum_options, native_options )
+    def schedule( peplum_options, payload_options )
       max_workers = peplum_options.delete('max_workers')
       objects     = peplum_options.delete('objects')
-      groups      = native_app.group( objects, max_workers )
+      groups      = payload.group( objects, max_workers )
 
       # Workload turned out to be less than our maximum allowed instances.
       # Don't spawn the max if we don't have to.
@@ -110,7 +110,7 @@ module Peplum
       # We couldn't get the workers we were going for, Grid reached its capacity,
       # re-balance distribution.
       if scheduler.workers.size < groups.size
-        groups = native_app.group( objects, scheduler.workers.size )
+        groups = payload.group( objects, scheduler.workers.size )
       end
 
       peers = Hash[scheduler.workers.values.map { |client| [client.url, client.token] }]
@@ -125,7 +125,7 @@ module Peplum
               token: Cuboid::Options.datastore.token
             }
           },
-          native: native_options
+          payload: payload_options
         )
       end
 
