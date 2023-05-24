@@ -1,13 +1,13 @@
 # Peplum -- Distributed computing made easy
 
-Peplum is a distributed computing solution backed by [Cuboid](https://github.com/qadron/cuboid).
+Peplum is a distributed parallel processing solution powered by [Cuboid](https://github.com/qadron/cuboid).
 
 Its basic function is to distribute workloads and deliver payloads across multiple machines and thus parallelize 
 otherwise time consuming tasks.
 
-Basically, Peplum allows you to combine several machines to built a cluster/supercomputer of sorts.
+Basically, Peplum allows you to combine the resources of several machines and build a Beowulf (or otherwise) cluster.
 
-Being written in Ruby, you can run OS applications, Ruby code, C/C++/Rust extensions and package your Peplum app as a gem.
+Being written in Ruby, you can deliver the payload of OS applications, Ruby code, C/C++/Rust extensions and package your Peplum app as a gem.
 
 ## Goal
 

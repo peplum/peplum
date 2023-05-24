@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors = ["Tasos Laskos"]
   spec.email = ["tasos.laskos@gmail.com"]
 
-  spec.summary = "Distributed computing made easy."
-  spec.description = "Distributed computing made easy."
+  spec.summary = "Distributed parallel processing made easy."
+  spec.description = "Distributed parallel processing made easy."
   spec.homepage = "http://ecsypno.com/"
   spec.required_ruby_version = ">= 2.6.0"
 
