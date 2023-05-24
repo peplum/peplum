@@ -121,7 +121,7 @@ module Peplum
             objects: groups.pop,
             peers:   peers,
             master:  {
-              url: Cuboid::Options.rpc.url,
+              url:   Cuboid::Options.rpc.url,
               token: Cuboid::Options.datastore.token
             }
           },
