@@ -8,8 +8,8 @@ otherwise time consuming tasks.
 
 Basically, Peplum allows you to combine the resources of several machines and build a Beowulf (or otherwise) cluster/super-computer.
 
-Being written in Ruby, you can deliver the payload of OS applications, Ruby code, C/C++/Rust extensions and package your 
-Peplum app as a [gem](https://guides.rubygems.org/what-is-a-gem/).
+Being written in [Ruby](https://www.ruby-lang.org/en/), you can deliver the payload of OS applications, Ruby code, C/C++/Rust 
+extensions and package your Peplum app as a [gem](https://guides.rubygems.org/what-is-a-gem/).
 
 ## Goal
 
