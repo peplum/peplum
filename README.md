@@ -1,6 +1,7 @@
 # Peplum -- Distributed computing made easy
 
-Peplum is a distributed parallel processing solution powered by [Cuboid](https://github.com/qadron/cuboid).
+Peplum is a distributed parallel processing solution powered by [Cuboid](https://github.com/qadron/cuboid) -- copyright
+[Ecsypno Single Member P.C.](https://ecsypno.com).
 
 Its basic function is to distribute workloads and deliver payloads across multiple machines and thus parallelize 
 otherwise time consuming tasks.
