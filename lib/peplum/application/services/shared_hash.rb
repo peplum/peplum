@@ -4,6 +4,8 @@ module Services
 
 class SharedHash
 
+  CONCURRENCY = 20
+
   def initialize(*)
     super
 
@@ -17,33 +19,41 @@ class SharedHash
     @hash[k]
   end
 
-  def set( k, v, broadcast = true )
-    return if @hash[k] == v
+  def set( k, v, broadcast = true, &block )
+    if @hash[k] == v
+      block.call if block_given?
+      return
+    end
 
     @hash[k] = v
     call_on_set( k, v )
 
     if broadcast
-      each_peer do |peer|
-        peer.send( name ).set( k, v, false )
+      each_peer do |peer, iterator|
+        peer.send( name ).set( k, v, false ) { iterator.next }
       end
     end
 
+    block.call if block_given?
     nil
   end
 
-  def delete( k, broadcast = true )
-    return if !@hash.include? k
+  def delete( k, broadcast = true, &block )
+    if !@hash.include? k
+      block.call if block_given?
+      return
+    end
 
     @hash.delete( k )
     call_on_delete( k )
 
     if broadcast
-      each_peer do |_, peer|
-        peer.send( name ).delete( k, false )
+      each_peer do |peer, iterator|
+        peer.send( name ).delete( k, false ) { iterator.next }
       end
     end
 
+    block.call if block_given?
     nil
   end
 
@@ -82,7 +92,10 @@ class SharedHash
   end
 
   def each_peer( &block )
-    Cuboid::Application.application.peers.each( &block )
+    each  = proc do |client, iterator|
+      block.call client, iterator
+    end
+    Raktr.global.create_iterator( Cuboid::Application.application.peers.to_a, CONCURRENCY ).each( each )
   end
 
 end
