@@ -5,7 +5,7 @@ Peplum is a distributed parallel processing solution powered by [Cuboid](https:/
 Its basic function is to distribute workloads and deliver payloads across multiple machines and thus parallelize 
 otherwise time consuming tasks.
 
-Basically, Peplum allows you to combine the resources of several machines and build a Beowulf (or otherwise) cluster.
+Basically, Peplum allows you to combine the resources of several machines and build a Beowulf (or otherwise) cluster/super-computer.
 
 Being written in Ruby, you can deliver the payload of OS applications, Ruby code, C/C++/Rust extensions and package your Peplum app as a gem.
 
