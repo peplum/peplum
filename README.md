@@ -1,4 +1,4 @@
-# Peplum -- Distributed computing made easy
+# Peplum -- Distributed parallel computing made easy
 
 Peplum is a distributed parallel processing solution powered by [Cuboid](https://github.com/qadron/cuboid) -- copyright
 [Ecsypno Single Member P.C.](https://ecsypno.com).
