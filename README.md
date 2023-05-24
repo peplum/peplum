@@ -13,9 +13,12 @@ extensions and package your Peplum app as a [gem](https://guides.rubygems.org/wh
 
 ## Goal
 
-The goal of the project is for Peplum to be to distributed computing development what Sinatra or Rails is for web application development.
+The goal of the project is for Peplum to be to distributed parallel computing development, what Sinatra or Rails is for
+web application development.
 
 An abstract, application-centric, straightforward and simple framework that get's out of your way and let's you accomplish your goals.
+
+Basically, the project's essential goal is to allow users to turn applications and code into _super_ version of themselves with ease.
 
 ## Creating a Peplum application
 
