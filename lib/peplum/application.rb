@@ -25,6 +25,7 @@ module Peplum
     end
 
     attr_reader :peers
+    attr_reader :master
 
     def initialize(*)
       super
@@ -51,6 +52,11 @@ module Peplum
       end
     end
 
+    def worker?
+      # Has a master?
+      !!@master
+    end
+
     # Implements:
     #   * `.run` -- Worker; executes its payload against `objects`.
     #   * `.group` -- Splits given `objects` into groups for each worker.
@@ -71,13 +77,13 @@ module Peplum
 
     def execute( peplum_options, payload_options )
       master_info = peplum_options.delete( 'master' )
+      @master = Processes::Instances.connect( master_info['url'], master_info['token'] )
 
       self.peers.set( peplum_options.delete( 'peers' ) || {} )
 
       report_data = payload.run( peplum_options['objects'], payload_options )
 
-      master = Processes::Instances.connect( master_info['url'], master_info['token'] )
-      master.scheduler.report report_data, Cuboid::Options.rpc.url
+      @master.scheduler.report report_data, Cuboid::Options.rpc.url
     end
 
     def schedule( peplum_options, payload_options )
