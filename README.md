@@ -3,7 +3,7 @@
 Peplum is a distributed parallel processing solution powered by [Cuboid](https://github.com/qadron/cuboid) -- copyright
 [Ecsypno Single Member P.C.](https://ecsypno.com).
 
-Its basic function is to distribute workloads and deliver payloads across multiple machines and thus parallelize 
+Its basic function is to distribute workloads and deliver abstract payloads across multiple machines and thus parallelize 
 otherwise time consuming tasks.
 
 Basically, Peplum allows you to combine the resources of several machines and build a Beowulf (or otherwise) cluster/super-computer.
