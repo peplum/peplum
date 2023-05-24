@@ -5,8 +5,6 @@ require 'peplum/core_ext/array'
 
 module Peplum
   class Application < Cuboid::Application
-    require 'peplum/application/peers'
-
     require 'peplum/application/services/shared_hash'
     require 'peplum/application/services/scheduler'
 
@@ -31,7 +29,7 @@ module Peplum
     def initialize(*)
       super
 
-      @peers = Peers.new
+      @peers = Cuboid::RPC::Server::Instance::Peers.new
     end
 
     def run
