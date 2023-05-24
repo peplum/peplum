@@ -22,7 +22,8 @@ See [Peplum::Template](https://github.com/peplum/template).
 
 ## Users
 
-* [Peplum::Nmap](https://github.com/peplum/peplum-nmap)
+* [Peplum::Nmap](https://github.com/peplum/peplum-nmap) -- Distributed network mapper/security scanner powered by [nmap](https://nmap.org).
+* [Peplum::John](https://github.com/peplum/peplum-john) -- Distributed password cracker powered by [John the Ripper](https://www.openwall.com/john/).
 
 ## Contributing
 
