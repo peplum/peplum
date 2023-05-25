@@ -24,7 +24,10 @@ module Peplum
       end
     end
 
+    # @return   [Cuboid::RPC::Server::Instance::Peers]
     attr_reader :peers
+
+    # @return   [Cuboid::RPC::Client::Instance]
     attr_reader :master
 
     def initialize(*)
@@ -52,20 +55,22 @@ module Peplum
       end
     end
 
+    # @return [TrueClass, FalseClass] Are we a worker Instance?
     def worker?
       # Has a master?
       !!@master
     end
 
-    # Implements:
-    #   * `.run` -- Worker; executes its payload against `objects`.
-    #   * `.split` -- Splits given `objects` into groups for each worker.
-    #   * `.merge` -- Merges results from multiple workers.
+    # @return [#run, #split, #merge]
     #
-    # That's all we need to turn any application into a super version of itself.
+    #   * `#run` -- Worker; executes its payload against `objects`.
+    #   * `#split` -- Scheduler; splits given `objects` into groups for each worker.
+    #   * `#merge` -- Scheduler; merges results from multiple workers.
+    #
+    #   That's all we need to turn any application into a super version of itself.
     #
     # @abstract
-    def payload
+   def payload
       fail Error, 'Missing #payload!'
     end
 
