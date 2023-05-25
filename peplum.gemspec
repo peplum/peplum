@@ -9,8 +9,10 @@ Gem::Specification.new do |spec|
   spec.email = ["tasos.laskos@gmail.com"]
 
   spec.summary = "Distributed parallel computing made easy."
-  spec.description = "Distributed parallel computing made easy."
-  spec.homepage = "http://ecsypno.com/"
+  spec.description = <<EOTXT
+Peplum allows you to easily combine the resources of multiple machines and build a Beowulf (or otherwise) cluster/super-computer.
+EOTXT
+  spec.homepage = "https://github.com/peplum/peplum"
   spec.required_ruby_version = ">= 2.6.0"
 
   spec.files  = Dir.glob( 'bin/*')
