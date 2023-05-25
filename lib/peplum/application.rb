@@ -4,58 +4,52 @@ require 'peplum'
 
 module Peplum
   class Application < Cuboid::Application
+    require 'peplum/application/worker'
     require 'peplum/application/payload'
 
     require 'peplum/application/services/shared_hash'
     require 'peplum/application/services/scheduler'
 
-    class Error < Peplum::Error; end
+    class Error < Peplum::Error
+      class PayloadMissing < Error
+      end
+    end
 
+    # Hijack Cuboid to set ourselves up.
     class <<self
       def inherited( application )
         super
 
+        # Don't trust Cuboid's auto-detection for this, make sure the inheriting class is the Cuboid application.
         Cuboid::Application.application = application
 
         application.validate_options_with :validate_options
-        application.serialize_with JSON
+        application.serialize_with MessagePack
 
         application.instance_service_for :scheduler,   Services::Scheduler
+
+        # Shared, in-memory key-value store for the workers, the scheduler will not be participate.
         application.instance_service_for :shared_hash, Services::SharedHash
       end
     end
 
-    # @return   [Cuboid::RPC::Server::Instance::Peers]
-    attr_reader :peers
-
-    # @return   [Cuboid::RPC::Client::Instance]
-    attr_reader :master
-
-    def initialize(*)
-      super
-
-      @peers = Cuboid::RPC::Server::Instance::Peers.new
-    end
-
     def run
       options = @options.dup
+
+      # System options.
       peplum_options = options.delete( 'peplum' )
+
+      # Payload options.
       payload_options = options.delete( 'payload' )
 
-      # We have a master so we're not the scheduler, run the payload.
+      # We have a master so we're a worker, run the payload.
       if peplum_options['master']
-        execute( peplum_options, payload_options )
+        work( peplum_options, payload_options )
 
-      # We're the scheduler Instance, get to grouping and spawning.
+      # We're the scheduler Instance, get to grouping objects and spawning workers.
       else
         schedule( peplum_options, payload_options )
       end
-    end
-
-    # @return [TrueClass, FalseClass] Are we a worker Instance?
-    def worker?
-      # Has a master?
-      !!@master
     end
 
     # @return [#run, #split, #merge]
@@ -68,23 +62,32 @@ module Peplum
     #
     # @abstract
    def payload
-      fail Error, 'Missing #payload!'
+      fail Error::PayloadMissing, 'Missing #payload implementation!'
     end
 
+    # Overload {Cuboid#report} and delegate to the {Payload.merge} prior passing it on to {Cuboid}.
+    # @private
     def report( data )
       super payload.merge( data )
     end
 
     private
 
-    def execute( peplum_options, payload_options )
+    def work( peplum_options, payload_options )
+      # We're now a worker class!
+      self.class.include Worker
+
       master_info = peplum_options.delete( 'master' )
       @master = Processes::Instances.connect( master_info['url'], master_info['token'] )
 
+      # Configure us to know the rest of our worker peers.
+      # Required for the SharedHash service.
       self.peers.set( peplum_options.delete( 'peers' ) || {} )
 
+      # Deliver the payload.
       report_data = payload.run( peplum_options['objects'], payload_options )
 
+      # Signal that we're done by passing our report to the scheduler.
       @master.scheduler.report report_data, Cuboid::Options.rpc.url
     end
 
@@ -153,8 +156,19 @@ module Peplum
         fail Error, 'Options: Missing :max_workers'
       end
 
+      validate_payload
+
       @options = options
       true
+    end
+
+    def validate_payload
+      p = self.payload
+
+      %w(run merge split).each do |m|
+        next if p.respond_to? m
+        fail Payload::Error::ImplementationMissing, "#{payload} missing implementation for: ##{m}"
+      end
     end
 
   end
