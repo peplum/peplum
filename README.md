@@ -20,6 +20,14 @@ An abstract, application-centric, straightforward and simple framework that get'
 
 Basically, the project's essential goal is to allow users to turn applications and code into _super_ version of themselves with ease.
 
+## Provides
+
+* No dependency setup.
+* `Services::SharedHash` accessible via `Application.shared_hash` -- Distributed key-value store, used as a DB, cache and/or message broker.
+  * Optionally, applications can add more shared hash services if they require.
+* Support for custom RPC and/or REST APIs/services.
+  * REST services should be designed to be only client facing, as RPC is the default and preferred medium for internal communication.
+
 ## Creating a Peplum application
 
 See [Peplum::Template](https://github.com/peplum/template).
