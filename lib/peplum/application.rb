@@ -5,6 +5,8 @@ require 'peplum/core_ext/array'
 
 module Peplum
   class Application < Cuboid::Application
+    require 'peplum/application/payload'
+
     require 'peplum/application/services/shared_hash'
     require 'peplum/application/services/scheduler'
 
@@ -37,10 +39,6 @@ module Peplum
     end
 
     def run
-      Raktr.global.on_error do |_, e|
-        $stderr.puts e
-      end
-
       options = @options.dup
       peplum_options = options.delete( 'peplum' )
       payload_options = options.delete( 'payload' )
