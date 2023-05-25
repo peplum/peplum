@@ -59,14 +59,14 @@ module Peplum
 
     # Implements:
     #   * `.run` -- Worker; executes its payload against `objects`.
-    #   * `.group` -- Splits given `objects` into groups for each worker.
+    #   * `.split` -- Splits given `objects` into groups for each worker.
     #   * `.merge` -- Merges results from multiple workers.
     #
     # That's all we need to turn any application into a super version of itself.
     #
     # @abstract
     def payload
-      fail Error, 'Missing payload app!'
+      fail Error, 'Missing #payload!'
     end
 
     def report( data )
@@ -89,7 +89,7 @@ module Peplum
     def schedule( peplum_options, payload_options )
       max_workers = peplum_options.delete('max_workers')
       objects     = peplum_options.delete('objects')
-      groups      = payload.group( objects, max_workers )
+      groups      = payload.split( objects, max_workers )
 
       # Workload turned out to be less than our maximum allowed instances.
       # Don't spawn the max if we don't have to.
