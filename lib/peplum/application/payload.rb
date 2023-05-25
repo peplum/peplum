@@ -1,3 +1,5 @@
+require 'peplum/core_ext/array'
+
 module Peplum
 class Application
 module Payload
@@ -13,7 +15,7 @@ module Payload
   # @param  [Hash, NilClass]  options Worker options.
   # @abstract
   def run( objects, options )
-    fail Error::ImplementationMissing, 'Missing implentation.'
+    fail Error::ImplementationMissing, 'Missing implementation.'
   end
 
   # Distribute `objects` into `groups_of` amount of groups, one for each worker.
@@ -28,10 +30,36 @@ module Payload
 
   # Merge result `data` for reporting.
   #
+  # By default provides a generic implementation that merges the values of `Hash`es and `Array`s.
+  # If `String`s or `Numeric`s are contained, the Array is returned as is.
+  #
   # @param  [Array] data  Report data from workers.
-  # @abstract
+  # @return [Object]  Merged results.
+  #
+  # @raise  [Error::ImplementationMissing]  When the data cannot be handled.
   def merge( data )
-    fail Error::ImplementationMissing, 'Missing implentation.'
+    case data.first
+    when Hash
+        f = data.pop
+        data.each do |d|
+
+          if !f.is_a? Hash
+            fail Error::ImplementationMissing, 'Missing implementation: Item not a Hash!'
+          end
+
+          f.merge! d
+        end
+        f
+
+    when Array
+      data.flatten
+
+    when String, Numeric
+      data
+
+    else
+      fail Error::ImplementationMissing, 'Missing implementation.'
+    end
   end
 
 end

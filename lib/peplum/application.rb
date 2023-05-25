@@ -1,7 +1,6 @@
 require 'cuboid'
 require 'json'
 require 'peplum'
-require 'peplum/core_ext/array'
 
 module Peplum
   class Application < Cuboid::Application
