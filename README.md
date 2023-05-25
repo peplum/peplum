@@ -11,6 +11,12 @@ Basically, Peplum allows you to combine the resources of multiple machines and b
 Being written in [Ruby](https://www.ruby-lang.org/en/), you can deliver the payload of OS applications, Ruby code, C/C++/Rust 
 extensions and package your Peplum app as a [gem](https://guides.rubygems.org/what-is-a-gem/).
 
+It can be used for educational/research purposes or to build commercial solutions in the cloud or on-premise or even used 
+to speed up your routine at home.
+
+Peplum can be deployed in a range of use-cases, such as running simulations, [network mapping/security scans](https://github.com/peplum/peplum-nmap),
+[password cracking/recovery](https://github.com/peplum/peplum-john) or just encoding your collection of music and video, etc.
+
 ## Goal
 
 The goal of the project is for Peplum to be to distributed parallel computing development, what Sinatra or Rails is for
