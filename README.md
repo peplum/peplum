@@ -22,7 +22,7 @@ Basically, the project's essential goal is to allow users to turn applications a
 
 ## Provides
 
-* No dependency setup.
+* No system dependency setup -- no DBs, etc.
 * `Services::SharedHash` accessible via `Application.shared_hash` -- Distributed key-value store, used as a DB, cache and/or message broker.
   * Optionally, applications can add more shared hash services if they require.
 * Support for custom RPC and/or REST APIs/services.
