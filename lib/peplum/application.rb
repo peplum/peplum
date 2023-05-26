@@ -24,7 +24,6 @@ module Peplum
         Cuboid::Application.application = application
 
         application.validate_options_with :validate_options
-        application.serialize_with MessagePack
 
         application.instance_service_for :scheduler,   Services::Scheduler
 
